@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 
 import { useParams } from 'next/navigation'
 import KnowledgeCard from '@/components/ui/knowledge/KnowledgeCard'
+import { AllKnowledgeAction } from '@/Action/Knowledge'
 
 const page = () => {
 
@@ -26,8 +27,10 @@ const page = () => {
 
     // Fetch TechKnowledge data from backend
     const knowledge = async () => {
-        const getknowledge = await getTechKnowledgeVault(email || "")
+        const getknowledge = await AllKnowledgeAction()
+
         setShowknowledge(getknowledge)
+        console.log(getknowledge)
     }
 
     // Render knowledge cards in a grid layout
