@@ -3,6 +3,7 @@ import { TechItem } from '@/lib/tech-data'
 import React from 'react'
 import { useForm, SubmitHandler } from "react-hook-form"
 import { Input } from "@/components/ui/input"
+import { NewKnowledgeAction } from '@/Action/Knowledge'
 
 const page = () => {
 
@@ -14,7 +15,7 @@ const page = () => {
   } = useForm<TechItem>()
 
   const onsubmit = async (data:TechItem) => {
-    console.log(data)
+    await NewKnowledgeAction(data)
   }
 
   return (
