@@ -2,10 +2,9 @@
 
 import Link from "next/link"
 import { useState } from "react"
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 
 export function Header() {
-  const [profileOpen, setProfileOpen] = useState(false)
-
   return (
     <header
       className="
@@ -58,6 +57,7 @@ export function Header() {
               { href: "/knowledge", label: "Explore" },
               { href: "/quiz", label: "Quizzes" },
               { href: "/new", label: "Add Knowledge" },
+              { href: "/userall", label: "My Knowledge" },
             ].map((nav) => (
               <Link
                 key={nav.href}
@@ -69,21 +69,14 @@ export function Header() {
                 "
               >
                 {nav.label}
-
-                {/* Animated Underline */}
-                <span
-                  className="
-                    absolute left-0 -bottom-1 w-0 h-[2px] bg-blue-500 
-                    transition-all duration-300 
-                    group-hover:w-full
-                  "
-                />
               </Link>
             ))}
           </nav>
 
-          {/* Right actions */}
-          <div className="flex items-center gap-3">
+          {/* Right Section */}
+          <div className="flex items-center gap-4">
+
+            {/* Search Button */}
             <button
               className="
                 p-2 rounded-lg 
@@ -106,8 +99,36 @@ export function Header() {
                 />
               </svg>
             </button>
-          </div>
 
+            {/* Signed Out -> Show Sign In */}
+            <SignedOut>
+              <Link
+                href="/signin"
+                className="
+                  text-sm font-medium text-blue-500 
+                  hover:underline
+                "
+              >
+                Sign In
+              </Link>
+            </SignedOut>
+
+            {/* Signed In -> Show Profile Image + Dropdown + Logout */}
+            <SignedIn>
+              <div className="flex items-center">
+                <UserButton 
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox: "w-9 h-9 rounded-full shadow-md hover:scale-105 transition-transform",
+                      userButtonPopoverCard: "shadow-xl border border-border bg-card",
+                    },
+                  }}
+                  afterSignOutUrl="/signin"
+                />
+              </div>
+            </SignedIn>
+
+          </div>
         </div>
       </div>
     </header>
