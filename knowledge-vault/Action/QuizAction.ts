@@ -1,6 +1,6 @@
 'use server'
 
-import { quizTable } from "@/db/schema";
+import { questionTable, quizTable } from "@/db/schema";
 import { db } from "..";
 import { eq } from "drizzle-orm";
 
@@ -12,14 +12,37 @@ export interface MCQ {
     option2: string,
     option3: string,
     option4: string
-    correctedAnswers: number; // index of correct option (0-3)
+    correctedAnswers: number;
+}
+
+export interface Quiz {
+    id: number;
     technology: string;
     difficulty: 'easy' | 'medium' | 'hard';
 }
 
-// New Quiz
-export const newQuizAction = async (data: MCQ[]) => {
-    const newdata = await db.insert(quizTable).values(data)
+export interface QuizWithQuestions extends Quiz {
+    questions: MCQ[];
+}
+
+// New Quiz with Questions
+export const newQuizAction = async (technology: string, difficulty: string, questions: Omit<MCQ, 'id'>[]) => {
+    const [quiz] = await db.insert(quizTable).values({
+        technology,
+        difficulty
+    }).returning()
+    
+    const questionsWithQuizId = questions.map(q => ({
+        quizId: quiz.id,
+        questions: q.questions,
+        option1: q.option1,
+        option2: q.option2,
+        option3: q.option3,
+        option4: q.option4,
+        correctedAnswers: q.correctedAnswers
+    }))
+    
+    await db.insert(questionTable).values(questionsWithQuizId)
     return true
 }
 
@@ -27,6 +50,17 @@ export const newQuizAction = async (data: MCQ[]) => {
 export const getQuizAction = async () => {
     const all = await db.select().from(quizTable)
     return all
+}
+
+// Single Quiz with all questions
+export const SingleQuizAction = async (id: number) => {
+    const quiz = await db.select().from(quizTable).where(eq(quizTable.id, Number(id)))
+    const questions = await db.select().from(questionTable).where(eq(questionTable.quizId, Number(id)))
+    
+    return {
+        ...quiz[0],
+        questions
+    }
 }
 
 

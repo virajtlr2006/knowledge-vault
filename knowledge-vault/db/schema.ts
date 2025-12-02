@@ -10,12 +10,17 @@ export const knowledgeTable = pgTable("knowledge", {
 
 export const quizTable = pgTable("quiz", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  technology: varchar().notNull(),
+  difficulty: varchar().notNull().default("medium"),
+});
+
+export const questionTable = pgTable("question", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  quizId: integer().notNull(),
   questions: varchar().notNull(),
   option1: varchar().notNull(),
   option2: varchar().notNull(),
   option3: varchar().notNull(),
   option4: varchar().notNull(),
-  technology: varchar().notNull(),
-  difficulty: varchar().notNull().default("medium"),
   correctedAnswers: integer().notNull().default(0)
 });
