@@ -4,158 +4,137 @@ import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { SingleKnowledgeAction } from "@/Action/Knowledge"
-import { Header } from "@/components/header"
+import { Header } from "@/components/ui/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
 
-const page = () => {
+const Page = () => {
   const [getsingleTech, setGetsingleTech] = useState<TechItem | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   const { id } = useParams()
 
   useEffect(() => {
-    if (id) {
-      singletech(Number(id))
-    }
+    if (id) singletech(Number(id))
   }, [id])
 
   const singletech = async (id: number) => {
     setIsLoading(true)
     try {
-      const singletechbyid: TechItem = await SingleKnowledgeAction(Number(id))
-      setGetsingleTech(singletechbyid || null)
+      const data: TechItem = await SingleKnowledgeAction(id)
+      setGetsingleTech(data || null)
     } finally {
       setIsLoading(false)
     }
   }
 
+  /* ------------ LOADING --------------- */
   if (isLoading) {
     return (
-      <>
+      <div className="min-h-screen flex flex-col bg-black text-white">
         <Header />
-        <main className="min-h-screen bg-gradient-to-b from-background via-background/95 to-background/90 py-12 md:py-16">
-          <div className="max-w-5xl mx-auto px-4 md:px-6">
-            <div className="animate-pulse space-y-8">
-              <div className="h-8 bg-muted rounded-lg w-32"></div>
-              <div className="h-96 bg-muted rounded-2xl"></div>
-            </div>
+        <main className="min-h-[60vh] flex items-center justify-center bg-black">
+          <div className="animate-pulse w-72 space-y-4">
+            <div className="h-6 bg-slate-800 rounded"></div>
+            <div className="h-6 bg-slate-800 rounded w-1/2"></div>
+            <div className="h-48 bg-slate-800 rounded-xl"></div>
           </div>
         </main>
         <Footer />
-      </>
+      </div>
     )
   }
 
+  /* ------------ NOT FOUND --------------- */
   if (!getsingleTech) {
     return (
-      <>
+      <div className="min-h-screen flex flex-col bg-black text-white">
         <Header />
-        <main className="min-h-screen bg-gradient-to-b from-background via-background/95 to-background/90 flex items-center justify-center py-12 md:py-16">
-          <div className="text-center px-4">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Knowledge not found</h1>
-            <p className="text-muted-foreground mb-6">
-              The knowledge item you're looking for doesn't exist.
-            </p>
-            <Link
-              href="/explore"
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity"
-            >
-              Back to Explore
-            </Link>
-          </div>
+        <main className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 bg-black">
+          <h1 className="text-3xl font-bold bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Knowledge Not Found
+          </h1>
+          <p className="text-slate-300 mb-6 mt-2">
+            The knowledge item you're looking for doesn't exist.
+          </p>
+
+          <Link
+            href="/knowledge"
+            className="px-5 py-2 rounded-xl bg-slate-900/50 border border-white/10 text-white hover:bg-white/10 transition"
+          >
+            Back to Explore
+          </Link>
         </main>
         <Footer />
-      </>
+      </div>
     )
   }
 
+  /* ------------ MAIN PAGE --------------- */
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
-      <main className="min-h-screen bg-gradient-to-b from-background via-background/95 to-background/90 py-12 md:py-16">
-        <div className="max-w-5xl mx-auto px-4 md:px-6">
+
+      <main className="px-4 md:px-10 py-12 bg-black min-h-screen">
+        
+        {/* Back Button */}
+        <div className="mb-6">
           <Link
-            href="/explore"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 font-medium text-sm group"
+            href="/knowledge"
+            className="text-sm text-slate-300 hover:text-white transition"
           >
-            <svg
-              className="w-4 h-4 group-hover:-translate-x-1 transition-transform"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back to Explore
+            ← Back to Explore
           </Link>
+        </div>
 
-          <div className="space-y-8">
-            {getsingleTech && (
-              <>
-                {/* 🔵 SINGLE MERGED CARD */}
-                <Card className="border border-border/40 rounded-2xl shadow-sm bg-card">
-                  <CardHeader className="border-b border-border/20 px-6 md:px-8 py-6">
-                    <CardTitle className="text-lg font-semibold text-foreground">
-                      Knowledge Details
-                    </CardTitle>
-                  </CardHeader>
+        {/* Card Container */}
+        <div className="max-w-5xl mx-auto">
+          <Card className="rounded-2xl bg-slate-900/50 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl transition">
+            <CardHeader className="border-b border-white/10 pb-4">
+              <CardTitle className="text-3xl font-bold bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Knowledge Details
+              </CardTitle>
+            </CardHeader>
 
-                  <CardContent className="px-6 md:px-8 py-8 space-y-8">
+            <CardContent className="grid md:grid-cols-2 gap-10 py-10">
 
-                    {/* SMALL CENTERED IMAGE */}
-                    <div className="flex justify-center">
-                      <img
-                        src={getsingleTech.img}
-                        alt={getsingleTech.name}
-                        className="w-36 h-36 object-cover rounded-xl shadow-md border border-border/40"
-                      />
-                    </div>
+              {/* IMAGE */}
+              <div className="flex justify-center">
+                <img
+                  src={getsingleTech.img}
+                  alt={getsingleTech.name}
+                  className="w-full h-64 object-cover rounded-xl border border-white/10 hover:scale-[1.02] transition"
+                />
+              </div>
 
-                    {/* 🔵 DETAILS AS SEPARATE BLOCKS */}
-                    <div className="space-y-5">
+              {/* DETAILS */}
+              <div className="space-y-6 text-white">
 
-                      {/* BLOCK 1 – TITLE */}
-                      <div className="border border-border/40 rounded-xl p-4 bg-background/40 hover:bg-primary/5 transition-colors">
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">
-                          Title
-                        </p>
-                        <p className="text-base font-semibold text-foreground">
-                          {getsingleTech.name}
-                        </p>
-                      </div>
+                <div>
+                  <p className="text-sm uppercase font-medium text-slate-400">Title</p>
+                  <p className="text-xl font-semibold">{getsingleTech.name}</p>
+                </div>
 
-                      {/* BLOCK 2 – AUTHOR */}
-                      <div className="border border-border/40 rounded-xl p-4 bg-background/40 hover:bg-primary/5 transition-colors">
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">
-                          Author
-                        </p>
-                        <p className="text-base font-semibold text-foreground">
-                          {getsingleTech.email}
-                        </p>
-                      </div>
+                <div>
+                  <p className="text-sm uppercase font-medium text-slate-400">Author</p>
+                  <p className="text-lg">{getsingleTech.email}</p>
+                </div>
 
-                      {/* BLOCK 3 – DESCRIPTION */}
-                      <div className="border border-border/40 rounded-xl p-4 bg-background/40 hover:bg-primary/5 transition-colors">
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-                          Description
-                        </p>
-                        <p className="text-foreground/80 leading-relaxed">
-                          {getsingleTech.desc}
-                        </p>
-                      </div>
+                <div>
+                  <p className="text-sm uppercase font-medium text-slate-400">Description</p>
+                  <p className="text-slate-300 leading-relaxed">{getsingleTech.desc}</p>
+                </div>
 
-                    </div>
-                  </CardContent>
-                </Card>
-              </>
-            )}
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </main>
+
       <Footer />
-    </>
+
+    </div>
   )
 }
 
-export default page
+export default Page
