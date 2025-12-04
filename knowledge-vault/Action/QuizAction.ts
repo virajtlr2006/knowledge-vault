@@ -25,13 +25,14 @@ export interface QuizWithQuestions extends Quiz {
     questions: MCQ[];
 }
 
-// New Quiz with Questions
+// New Quiz with Questions without getting id from MCQ
 export const newQuizAction = async (technology: string, difficulty: string, questions: Omit<MCQ, 'id'>[]) => {
     const [quiz] = await db.insert(quizTable).values({
         technology,
         difficulty
     }).returning()
-    
+
+    // New questions added using qquiz.id as foriegn key
     const questionsWithQuizId = questions.map(q => ({
         quizId: quiz.id,
         questions: q.questions,
@@ -41,7 +42,8 @@ export const newQuizAction = async (technology: string, difficulty: string, ques
         option4: q.option4,
         correctedAnswers: q.correctedAnswers
     }))
-    
+
+    // Insert new question into db
     await db.insert(questionTable).values(questionsWithQuizId)
     return true
 }
@@ -55,8 +57,9 @@ export const getQuizAction = async () => {
 // Single Quiz with all questions
 export const SingleQuizAction = async (id: number) => {
     const quiz = await db.select().from(quizTable).where(eq(quizTable.id, Number(id)))
+    // Clicking on a gives retrived all questions matching to the quiz.id in questionTable
     const questions = await db.select().from(questionTable).where(eq(questionTable.quizId, Number(id)))
-    
+
     return {
         ...quiz[0],
         questions
