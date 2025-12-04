@@ -4,7 +4,7 @@ import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { SingleKnowledgeAction } from "@/Action/Knowledge"
-import { Header } from "@/components/header"
+import { Header } from "@/components/ui/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
 

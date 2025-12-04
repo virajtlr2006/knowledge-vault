@@ -6,7 +6,7 @@ import { NewKnowledgeAction } from "@/Action/Knowledge"
 import { useRouter } from "next/navigation"
 import { useCurrentUser } from "@/hook/hook"
 import { Footer } from "@/components/footer"
-import { Header } from "@/components/header"
+import { Header } from "@/components/ui/header"
 
 const AddKnowledgePage = () => {
   const router = useRouter()

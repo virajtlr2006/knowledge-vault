@@ -2,7 +2,7 @@
 
 import { UserallKnowledgeAction } from "@/Action/Knowledge"
 import KnowledgeCard from "@/components/ui/knowledge/KnowledgeCard"
-import { Header } from "@/components/header"
+import { Header } from "@/components/ui/header"
 import { Footer } from "@/components/footer"
 import { useCurrentUser } from "@/hook/hook"
 import type { TechItem } from "@/lib/tech-data"

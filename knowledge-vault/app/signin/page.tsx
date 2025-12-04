@@ -2,7 +2,7 @@
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
-import { Header } from "@/components/header"
+import { Header } from "@/components/ui/header"
 import { Footer } from "@/components/footer"
 
 const SignInContent = () => {

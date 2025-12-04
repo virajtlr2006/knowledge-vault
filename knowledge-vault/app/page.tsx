@@ -1,6 +1,6 @@
 'use client'
 import { Footer } from '@/components/footer'
-import { Header } from '@/components/header'
+import { Header } from '@/components/ui/header'
 import Link from 'next/link'
 import React from 'react'
 
